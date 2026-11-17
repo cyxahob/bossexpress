@@ -1,0 +1,2783 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BOSS EXPRESS LLC | International Multimodal Freight Forwarding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F4F7FA;
+      --bg-tertiary: #EBF0F5;
+      --navy-900: #00243D;
+      --navy-800: #0A3656;
+      --navy-700: #134B73;
+      --accent-orange: #E65100;
+      --accent-orange-hover: #BF360C;
+      --accent-amber: #F57C00;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --border-light: #D8E1E8;
+      --border-strong: #CBD5E1;
+      --success: #0F766E;
+      --success-bg: #CCFBF1;
+      --warning: #B45309;
+      --warning-bg: #FEF3C7;
+      --danger: #B91C1C;
+      --danger-bg: #FEE2E2;
+      --radius: 4px;
+      --shadow-sm: 0 1px 3px rgba(0, 36, 61, 0.06);
+      --shadow-md: 0 8px 24px rgba(0, 36, 61, 0.08);
+      --shadow-lg: 0 20px 48px rgba(0, 36, 61, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Top Operational Bar */
+    .top-bar {
+      background-color: var(--navy-900);
+      color: #E2E8F0;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .top-bar-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 38px;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 6px 0;
+    }
+
+    .top-bar-left, .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background-color: #10B981;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .top-link {
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .top-link:hover {
+      color: #FDBA74;
+    }
+
+    .copy-badge {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .copy-badge:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Main Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 74px;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--navy-900);
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      background: var(--navy-900);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      position: relative;
+    }
+
+    .brand-mark::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-orange);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: 0.04em;
+      line-height: 1.15;
+      color: var(--navy-900);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    nav a:hover {
+      color: var(--navy-900);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-secondary);
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .lang-btn.active {
+      background: var(--navy-900);
+      color: #FFFFFF;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--accent-orange);
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-orange-hover);
+    }
+
+    .btn-navy {
+      background: var(--navy-900);
+      color: #FFFFFF;
+    }
+
+    .btn-navy:hover {
+      background: var(--navy-800);
+    }
+
+    .btn-outline {
+      background: #FFFFFF;
+      color: var(--navy-900);
+      border-color: var(--border-strong);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--navy-900);
+      background: var(--bg-secondary);
+    }
+
+    .btn-sm {
+      padding: 7px 13px;
+      font-size: 13px;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 64px 0 72px;
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, #FFFFFF 100%);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-orange);
+      margin-bottom: 16px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: var(--accent-orange);
+    }
+
+    h1 {
+      font-size: 40px;
+      line-height: 1.16;
+      font-weight: 700;
+      color: var(--navy-900);
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    .hero-desc {
+      font-size: 17px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      max-width: 620px;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .metric-val {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--navy-900);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Quick Quote Card in Hero */
+    .quick-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      border-top: 3px solid var(--navy-900);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .quick-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .quick-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .sla-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-orange);
+      background: #FFF3E0;
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-primary);
+      background: #FFFFFF;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--navy-900);
+    }
+
+    /* Section Standard */
+    section {
+      padding: 76px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .section-alt {
+      background-color: var(--bg-secondary);
+    }
+
+    .section-header {
+      max-width: 720px;
+      margin-bottom: 44px;
+    }
+
+    h2 {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--navy-900);
+      letter-spacing: -0.015em;
+      margin-bottom: 12px;
+    }
+
+    .section-lead {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .service-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .service-card:hover {
+      border-color: var(--navy-700);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .service-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .service-code {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy-700);
+      background: var(--bg-secondary);
+      padding: 4px 8px;
+      border-radius: 3px;
+    }
+
+    .service-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--navy-900);
+      margin-bottom: 10px;
+    }
+
+    .service-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .service-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-light);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .service-tag {
+      color: var(--text-muted);
+    }
+
+    .service-transit {
+      color: var(--accent-orange);
+    }
+
+    /* Currency Compliance Strip */
+    .compliance-banner {
+      margin-top: 28px;
+      background: var(--navy-900);
+      color: #FFFFFF;
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .compliance-banner h4 {
+      font-size: 16px;
+      margin-bottom: 4px;
+      color: #FFFFFF;
+    }
+
+    .compliance-banner p {
+      font-size: 13px;
+      color: #CBD5E1;
+      max-width: 720px;
+    }
+
+    .currency-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .curr-pill {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 6px 12px;
+      border-radius: 3px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+
+    /* Regions Grid */
+    .regions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .region-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .region-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .region-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .region-ports {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .region-modes {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy-700);
+    }
+
+    /* Calculator */
+    .calc-wrapper {
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .calc-top-bar {
+      background: var(--navy-900);
+      color: #FFFFFF;
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .calc-top-title {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .curr-selector {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      padding: 2px;
+    }
+
+    .curr-btn {
+      background: transparent;
+      border: none;
+      color: #CBD5E1;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    .curr-btn.active {
+      background: var(--accent-orange);
+      color: #FFFFFF;
+    }
+
+    .calc-body {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+    }
+
+    .calc-inputs {
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      border-right: 1px solid var(--border-light);
+    }
+
+    .calc-result {
+      padding: 28px;
+      background: var(--bg-secondary);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .calc-price-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .calc-price {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--navy-900);
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .calc-summary-box {
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .calc-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* Corridors Table */
+    .table-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--bg-secondary);
+      color: var(--navy-900);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-strong);
+    }
+
+    td {
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-primary);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* RFQ Section */
+    .rfq-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 44px;
+      align-items: start;
+    }
+
+    .contact-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .contact-item {
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .contact-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .contact-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .contact-val {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .rfq-form-box {
+      background: #FFFFFF;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--navy-900);
+      color: #CBD5E1;
+      padding: 48px 0 32px;
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding-bottom: 32px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .footer-bottom {
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: #94A3B8;
+      font-size: 12px;
+    }
+
+    /* CLIENT PORTAL MODAL & WORKSPACE */
+    .portal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0, 36, 61, 0.65);
+      backdrop-filter: blur(4px);
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    .portal-overlay.open {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .portal-modal {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 1120px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-strong);
+      overflow: hidden;
+      margin: auto;
+    }
+
+    .portal-header {
+      background: var(--navy-900);
+      color: #FFFFFF;
+      padding: 18px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .portal-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .portal-badge {
+      background: var(--accent-orange);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .portal-close {
+      background: rgba(255, 255, 255, 0.12);
+      border: none;
+      color: #FFFFFF;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius);
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .portal-close:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .auth-box {
+      max-width: 440px;
+      margin: 48px auto;
+      padding: 32px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      background: var(--bg-secondary);
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+      background: #FFFFFF;
+    }
+
+    .auth-tab {
+      padding: 9px;
+      border: none;
+      background: transparent;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    .auth-tab.active {
+      background: var(--navy-900);
+      color: #FFFFFF;
+    }
+
+    .portal-body {
+      padding: 28px;
+    }
+
+    .portal-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .portal-nav-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .p-tab {
+      padding: 8px 16px;
+      border: 1px solid var(--border-strong);
+      background: #FFFFFF;
+      color: var(--text-secondary);
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .p-tab.active {
+      background: var(--navy-900);
+      color: #FFFFFF;
+      border-color: var(--navy-900);
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .st-Booking { background: #E0F2FE; color: #0369A1; }
+    .st-AtPort { background: #FEF3C7; color: #B45309; }
+    .st-InTransit { background: #DBEAFE; color: #1D4ED8; }
+    .st-Customs { background: #FCE7F3; color: #BE185D; }
+    .st-Delivered { background: #CCFBF1; color: #0F766E; }
+
+    .alert-msg {
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .alert-msg.error {
+      display: block;
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #FCA5A5;
+    }
+
+    .alert-msg.success {
+      display: block;
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #5EEAD4;
+    }
+
+    .admin-panel-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-strong);
+      border-left: 4px solid var(--accent-orange);
+      padding: 22px;
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+    }
+
+    .doc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-strong);
+      color: var(--navy-900);
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      text-decoration: none;
+      margin-right: 6px;
+      margin-bottom: 4px;
+    }
+
+    .doc-link:hover {
+      border-color: var(--accent-orange);
+      color: var(--accent-orange);
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid, .calc-body, .rfq-grid {
+        grid-template-columns: 1fr;
+      }
+      .calc-inputs {
+        border-right: none;
+        border-bottom: 1px solid var(--border-light);
+      }
+      .services-grid, .regions-grid {
+        grid-template-columns: 1fr;
+      }
+      nav {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 30px;
+      }
+      .calc-inputs, .form-row-2, .hero-metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="container top-bar-inner">
+      <div class="top-bar-left">
+        <span><span class="status-dot"></span><span data-i18n="topStatus">Операционный деск Москва: 09:00–19:00 (MSK / UTC+3)</span></span>
+        <span class="mono" style="color:#94A3B8;" data-i18n="topModes">МОРЕ • ЖД • АВТО • МУЛЬТИМОДАЛЬНЫЕ ПЕРЕВОЗКИ</span>
+      </div>
+      <div class="top-bar-right">
+        <a href="mailto:logistics@bossexpress-cargo.ru" class="top-link mono">logistics@bossexpress-cargo.ru</a>
+        <button type="button" class="copy-badge" id="copyTopEmail" onclick="copyEmail()">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="container header-inner">
+      <a href="#" class="brand">
+        <div class="brand-mark">BE</div>
+        <div class="brand-text">
+          <span class="brand-name">BOSS EXPRESS</span>
+          <span class="brand-sub" data-i18n="brandSub">International Freight Forwarding</span>
+        </div>
+      </a>
+
+      <nav>
+        <a href="#services" data-i18n="navServices">Сервисы</a>
+        <a href="#regions" data-i18n="navRegions">География</a>
+        <a href="#calculator" data-i18n="navCalc">Калькулятор</a>
+        <a href="#corridors" data-i18n="navCorridors">Коридоры</a>
+        <a href="#rfq" data-i18n="navContact">Контакты и RFQ</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="lang-switch" role="group" aria-label="Language switcher">
+          <button type="button" class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</button>
+          <button type="button" class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+        </div>
+        <button type="button" class="btn btn-navy btn-sm" onclick="openPortal()" id="portalHeaderBtn" data-i18n="navPortal">Личный кабинет</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow" data-i18n="heroEyebrow">МЕЖДУНАРОДНАЯ ЭКСПЕДИТОРСКАЯ КОМПАНИЯ</div>
+        <h1 data-i18n="heroTitle">Мультимодальная контейнерная и наземная логистика для B2B-поставок</h1>
+        <p class="hero-desc" data-i18n="heroDesc">
+          Организуем морские (FCL/LCL), железнодорожные и автомобильные перевозки из Китая, Турции, ОАЭ, Индии, Юго-Восточной Азии и Европы в Россию с таможенным оформлением и прозрачными мультивалютными расчетами.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="#calculator" class="btn btn-primary" data-i18n="heroCtaCalc">Рассчитать стоимость</a>
+          <button type="button" class="btn btn-outline" onclick="openPortal()" data-i18n="heroCtaPortal">Отследить груз в кабинете</button>
+        </div>
+
+        <div class="hero-metrics">
+          <div>
+            <div class="metric-val mono">6+</div>
+            <div class="metric-label" data-i18n="metric1">Международных торговых регионов</div>
+          </div>
+          <div>
+            <div class="metric-val mono">5</div>
+            <div class="metric-label" data-i18n="metric2">Валют расчетов (RUB, CNY, USD, EUR, AED)</div>
+          </div>
+          <div>
+            <div class="metric-val mono">&lt; 2 ч</div>
+            <div class="metric-label" data-i18n="metric3">Расчет ставки по запросу RFQ</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Express RFQ Card -->
+      <div class="quick-card">
+        <div class="quick-card-header">
+          <span class="quick-card-title" data-i18n="quickTitle">Экспресс-запрос ставки</span>
+          <span class="sla-tag mono">SLA 2H</span>
+        </div>
+        <form id="heroQuickForm" onsubmit="handleQuickSubmit(event)">
+          <div class="form-group">
+            <label for="hqRoute" data-i18n="hqRouteLabel">Маршрут (Откуда → Куда)</label>
+            <input type="text" id="hqRoute" required data-i18n-placeholder="hqRoutePh" placeholder="Например: Нинбо → Москва (Ворсино)" />
+          </div>
+          <div class="form-group">
+            <label for="hqEquip" data-i18n="hqEquipLabel">Тип оборудования / загрузки</label>
+            <select id="hqEquip">
+              <option value="40'HC Container" data-i18n="opt40hc">40'HC Контейнер</option>
+              <option value="20'DC Container" data-i18n="opt20dc">20'DC Контейнер</option>
+              <option value="LCL Consolidation" data-i18n="optLcl">Сборный груз (LCL)</option>
+              <option value="FTL Truck" data-i18n="optFtl">Автофура (FTL 20т / 82–90 м³)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="hqWeight" data-i18n="hqWeightLabel">Вес брутто / Объем / Наименование</label>
+            <input type="text" id="hqWeight" required data-i18n-placeholder="hqWeightPh" placeholder="18 500 кг, оборудование (код ТН ВЭД)" />
+          </div>
+          <div class="form-group">
+            <label for="hqContact" data-i18n="hqContactLabel">Корпоративный Email или телефон</label>
+            <input type="text" id="hqContact" required data-i18n-placeholder="hqContactPh" placeholder="name@company.ru / +7..." />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;" data-i18n="hqSubmitBtn">Получить расчет ставки</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Services -->
+  <section id="services">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow" data-i18n="srvEyebrow">КОМПЕТЕНЦИИ</div>
+        <h2 data-i18n="srvTitle">Ключевые экспедиторские сервисы</h2>
+        <p class="section-lead" data-i18n="srvLead">
+          Проектируем оптимальные цепочки поставок на базе морского, железнодорожного и автомобильного транспорта под ваш бюджет и сроки контракта.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div>
+            <div class="service-top">
+              <span class="service-code mono">SEA / FCL &amp; LCL</span>
+            </div>
+            <h3 class="service-title" data-i18n="srv1Title">Морские контейнерные перевозки</h3>
+            <p class="service-desc" data-i18n="srv1Desc">
+              Регулярные фидерные и океанские сервисы из портов Китая (Нинбо, Шанхай, Шэньчжэнь, Циндао), Турции (Стамбул, Мерсин), ОАЭ (Джебель-Али) и Индии (Нава-Шева) через Владивосток, Восточный, Новороссийск и Санкт-Петербург.
+            </p>
+          </div>
+          <div class="service-meta">
+            <span class="service-tag" data-i18n="srv1Tag">20'DC / 40'HC / LCL</span>
+            <span class="service-transit mono" data-i18n="srv1Time">22–38 дней</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div>
+            <div class="service-top">
+              <span class="service-code mono">RAIL / BLOCK TRAIN</span>
+            </div>
+            <h3 class="service-title" data-i18n="srv2Title">Железнодорожные контейнерные поезда</h3>
+            <p class="service-desc" data-i18n="srv2Desc">
+              Ускоренные блок-поезда из основных промышленных кластеров Китая через погранпереходы Забайкальск, Достык, Алтынколь и Эрлянь напрямую на терминалы Московского узла и регионов РФ.
+            </p>
+          </div>
+          <div class="service-meta">
+            <span class="service-tag" data-i18n="srv2Tag">Прямое ЖД + Море-ЖД</span>
+            <span class="service-transit mono" data-i18n="srv2Time">16–24 дня</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div>
+            <div class="service-top">
+              <span class="service-code mono">ROAD / FTL &amp; LTL</span>
+            </div>
+            <h3 class="service-title" data-i18n="srv3Title">Международные автоперевозки и вывоз</h3>
+            <p class="service-desc" data-i18n="srv3Desc">
+              Прямые тентованные и рефрижераторные фуры из Китая и Турции, транзитные маршруты из Европы, а также портовый и терминальный контейнеровозный вывоз до склада получателя.
+            </p>
+          </div>
+          <div class="service-meta">
+            <span class="service-tag" data-i18n="srv3Tag">Door-to-Door по РФ</span>
+            <span class="service-transit mono" data-i18n="srv3Time">14–22 дня</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div>
+            <div class="service-top">
+              <span class="service-code mono">CUSTOMS &amp; COMPLIANCE</span>
+            </div>
+            <h3 class="service-title" data-i18n="srv4Title">Таможенное оформление и ВЭД-сопровождение</h3>
+            <p class="service-desc" data-i18n="srv4Desc">
+              Подбор кодов ТН ВЭД, проверка товаросопроводительных документов до отгрузки, подача деклараций на постах ЦЭД, сертификация и полный пакет закрывающих документов для бухгалтерии.
+            </p>
+          </div>
+          <div class="service-meta">
+            <span class="service-tag" data-i18n="srv4Tag">Импорт / Экспорт / ВТТ</span>
+            <span class="service-transit mono" data-i18n="srv4Time">1–2 рабочих дня</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-currency compliance banner -->
+      <div class="compliance-banner">
+        <div>
+          <h4 data-i18n="currBannerTitle">Гибкие мультивалютные расчеты и прозрачный документооборот</h4>
+          <p data-i18n="currBannerDesc">
+            Работаем по безналичным договорам с юридическими лицами РФ (оплата в RUB с закрывающими документами) и поддерживаем расчеты с зарубежными отправителями и агентами в иностранной валюте.
+          </p>
+        </div>
+        <div class="currency-pills mono">
+          <span class="curr-pill">RUB ₽</span>
+          <span class="curr-pill">CNY ¥</span>
+          <span class="curr-pill">USD $</span>
+          <span class="curr-pill">EUR €</span>
+          <span class="curr-pill">AED د.إ</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Regions -->
+  <section id="regions" class="section-alt">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow" data-i18n="regEyebrow">ГЕОГРАФИЯ ПОСТАВОК</div>
+        <h2 data-i18n="regTitle">Международные направления работы</h2>
+        <p class="section-lead" data-i18n="regLead">
+          Агентская сеть в ключевых экспортных хабах позволяет забирать груз на условиях EXW/FCA со склада поставщика и контролировать погрузку.
+        </p>
+      </div>
+
+      <div class="regions-grid">
+        <div class="region-card">
+          <div class="region-header">
+            <span class="region-name" data-i18n="reg1Name">Китай (КНР)</span>
+            <span class="mono" style="font-size:12px;color:var(--accent-orange);">CN → RU</span>
+          </div>
+          <p class="region-ports" data-i18n="reg1Ports">Шанхай, Нинбо, Шэньчжэнь, Гуанчжоу, Циндао, Тяньцзинь, Иу</p>
+          <div class="region-modes" data-i18n="reg1Modes">Море + ЖД • Прямое ЖД • Прямое Авто</div>
+        </div>
+
+        <div class="region-card">
+          <div class="region-header">
+            <span class="region-name" data-i18n="reg2Name">Турция</span>
+            <span class="mono" style="font-size:12px;color:var(--accent-orange);">TR → RU</span>
+          </div>
+          <p class="region-ports" data-i18n="reg2Ports">Стамбул (Амбарли), Мерсин, Измир, Бурса</p>
+          <div class="region-modes" data-i18n="reg2Modes">Море на Новороссийск • Прямое Авто FTL/LTL</div>
+        </div>
+
+        <div class="region-card">
+          <div class="region-header">
+            <span class="region-name" data-i18n="reg3Name">ОАЭ и Ближний Восток</span>
+            <span class="mono" style="font-size:12px;color:var(--accent-orange);">AE → RU</span>
+          </div>
+          <p class="region-ports" data-i18n="reg3Ports">Дубай (Джебель-Али), Абу-Даби, Шарджа</p>
+          <div class="region-modes" data-i18n="reg3Modes">Море (Новороссийск / СПБ) • Реэкспортные хабы</div>
+        </div>
+
+        <div class="region-card">
+          <div class="region-header">
+            <span class="region-name" data-i18n="reg4Name">Индия</span>
+            <span class="mono" style="font-size:12px;color:var(--accent-orange);">IN → RU</span>
+          </div>
+          <p class="region-ports" data-i18n="reg4Ports">Нава-Шева (Мумбаи), Мундра, Ченнаи</p>
+          <div class="region-modes" data-i18n="reg4Modes">Море FCL/LCL • Коридор Север–Юг</div>
+        </div>
+
+        <div class="region-card">
+          <div class="region-header">
+            <span class="region-name" data-i18n="reg5Name">Юго-Восточная Азия и Корея</span>
+            <span class="mono" style="font-size:12px;color:var(--accent-orange);">VN / KR → RU</span>
+          </div>
+          <p class="region-ports" data-i18n="reg5Ports">Хошимин, Хайфон, Пусан, Бангкок, Порт-Кланг</p>
+          <div class="region-modes" data-i18n="reg5Modes">Море через Владивосток / Восточный + ЖД</div>
+        </div>
+
+        <div class="region-card">
+          <div class="region-header">
+            <span class="region-name" data-i18n="reg6Name">Европа (транзитные маршруты)</span>
+            <span class="mono" style="font-size:12px;color:var(--accent-orange);">EU → RU</span>
+          </div>
+          <p class="region-ports" data-i18n="reg6Ports">Консолидационные склады в Прибалтике, Польше, Германии, Италии</p>
+          <div class="region-modes" data-i18n="reg6Modes">Авто FTL/LTL с перецепкой • Контейнерный сервис</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Freight Calculator -->
+  <section id="calculator">
+    <div class="container">
+      <div class="section-header">
+        <div class="eyebrow" data-i18n="calcEyebrow">ОНЛАЙН-ОЦЕНКА БЮДЖЕТА</div>
+        <h2 data-i18n="calcTitle">Интерактивный калькулятор фрахта</h2>
+        <p class="section-lead" data-i18n="calcLead">
+          Выберите регион отправления, вид транспорта, тип контейнера и валюту отображения для предварительного расчета стоимости.
+        </p>
+      </div>
+
+      <div class="calc-wrapper">
+        <div class="calc-top-bar">
+          <span class="calc-top-title" data-i18n="calcBarTitle">Параметры мультимодальной перевозки</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:12px;color:#CBD5E1;" data-i18n="calcCurrLabel">Валюта расчета:</span>
+            <div class="curr-selector" id="calcCurrSelector">
+              <button type="button" class="curr-btn active" onclick="setCurrency('USD')">USD $</button>
+              <button type="button" class="curr-btn" onclick="setCurrency('CNY')">CNY ¥</button>
+              <button type="button" class="curr-btn" onclick="setCurrency('RUB')">RUB ₽</button>
+              <button type="button" class="curr-btn" onclick="setCurrency('EUR')">EUR €</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-body">
+          <div class="calc-inputs">
+            <div>
+              <label for="calcOrigin" data-i18n="cOriginLabel">Регион / Порт отправления</label>
+              <select id="calcOrigin" onchange="recalculate()">
+                <option value="cn_east" data-i18n="origCnEast">Китай — Восточный (Шанхай / Нинбо)</option>
+                <option value="cn_south" data-i18n="origCnSouth">Китай — Южный (Шэньчжэнь / Гуанчжоу)</option>
+                <option value="tr" data-i18n="origTr">Турция (Стамбул / Мерсин)</option>
+                <option value="ae" data-i18n="origAe">ОАЭ (Джебель-Али)</option>
+                <option value="in" data-i18n="origIn">Индия (Нава-Шева / Мундра)</option>
+                <option value="sea" data-i18n="origSea">ЮВА / Корея (Хошимин / Пусан)</option>
+                <option value="eu" data-i18n="origEu">Европа (Консолидационный хаб ЕС)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="calcDest" data-i18n="cDestLabel">Пункт назначения в РФ</label>
+              <select id="calcDest" onchange="recalculate()">
+                <option value="msk" data-i18n="destMsk">Москва и МО (Ворсино / Селятино / Электроугли)</option>
+                <option value="spb" data-i18n="destSpb">Санкт-Петербург и СЗФО</option>
+                <option value="ekb" data-i18n="destEkb">Екатеринбург / Урал</option>
+                <option value="nsk" data-i18n="destNsk">Новосибирск / Сибирь</option>
+                <option value="krd" data-i18n="destKrd">Краснодар / ЮФО</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="calcMode" data-i18n="cModeLabel">Схема перевозки</label>
+              <select id="calcMode" onchange="recalculate()">
+                <option value="sea_rail" data-i18n="modeSeaRail">Море + ЖД (Мультимодальный)</option>
+                <option value="direct_rail" data-i18n="modeRail">Прямой контейнерный поезд (ЖД)</option>
+                <option value="sea_only" data-i18n="modeSea">Море до порта РФ + автовывоз</option>
+                <option value="truck" data-i18n="modeTruck">Прямая международная автоперевозка</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="calcEquip" data-i18n="cEquipLabel">Тип оборудования</label>
+              <select id="calcEquip" onchange="recalculate()">
+                <option value="40hc" data-i18n="eq40hc">40'HC (High Cube)</option>
+                <option value="20dc" data-i18n="eq20dc">20'DC (Standard)</option>
+                <option value="lcl" data-i18n="eqLcl">LCL (Сборный груз, до 10 м³)</option>
+                <option value="ftl" data-i18n="eqFtl">FTL (Еврофура 82–90 м³)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="calc-result">
+            <div>
+              <div class="calc-price-label" data-i18n="cEstLabel">ОРИЕНТИРОВОЧНАЯ СТАВКА</div>
+              <div class="calc-price mono" id="calcPriceOutput">$4,350</div>
+              <div class="calc-summary-box" id="calcSummaryText">
+                Китай — Восточный → Москва • Море + ЖД • 40'HC • ~26–32 дн.
+              </div>
+              <p class="calc-note" data-i18n="cDisclaimer">
+                Индикативный расчет. Финальная котировка зависит от даты готовности груза, веса брутто и условий Инкотермс. Оплата возможна в RUB, CNY, USD, EUR или AED.
+              </p>
+            </div>
+            <button type="button" class="btn btn-primary" style="width:100%;" onclick="transferCalcToRfq()" data-i18n="cTransferBtn">
+              Зафиксировать расчет в заявке
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trade Corridors Table -->
+  <section id="corridors" class="section-alt">
+    <div class="container">
+      <div class="table-header-bar">
+        <div>
+          <div class="eyebrow" data-i18n="corEyebrow">СВОДКА НАПРАВЛЕНИЙ</div>
+          <h2 data-i18n="corTitle">Основные торговые коридоры и сроки</h2>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:13px;color:var(--text-secondary);font-weight:600;" data-i18n="corCurrLabel">Валюта в таблице:</span>
+          <div class="curr-selector" style="background:var(--navy-900);" id="tableCurrSelector">
+            <button type="button" class="curr-btn active" onclick="setCurrency('USD')">USD $</button>
+            <button type="button" class="curr-btn" onclick="setCurrency('CNY')">CNY ¥</button>
+            <button type="button" class="curr-btn" onclick="setCurrency('RUB')">RUB ₽</button>
+            <button type="button" class="curr-btn" onclick="setCurrency('EUR')">EUR €</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="thCorridor">Коридор</th>
+              <th data-i18n="thHubs">Порты / Погранпереходы</th>
+              <th data-i18n="thMode">Вид транспорта</th>
+              <th data-i18n="thTransit">Транзитное время</th>
+              <th data-i18n="thRate">Ориентир 40'HC / FTL</th>
+            </tr>
+          </thead>
+          <tbody id="corridorsTbody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- RFQ & Contact Section -->
+  <section id="rfq">
+    <div class="container rfq-grid">
+      <div>
+        <div class="eyebrow" data-i18n="rfqEyebrow">КОММЕРЧЕСКИЙ ОТДЕЛ</div>
+        <h2 data-i18n="rfqTitle">Запрос коммерческого предложения (RFQ)</h2>
+        <p class="section-lead" style="margin-bottom:28px;" data-i18n="rfqLead">
+          Направьте параметры вашей партии — специалист подготовит детальный расчет с разбивкой по плечам перевозки и терминальным расходам.
+        </p>
+
+        <div class="contact-card">
+          <div class="contact-item">
+            <div class="contact-label" data-i18n="cntLegalLabel">Юридическое лицо</div>
+            <div class="contact-val">BOSS EXPRESS LLC / ООО «БОССЭКСПРЕСС»</div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-label" data-i18n="cntEmailLabel">Единый отдел котировок и логистики</div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;">
+              <a href="mailto:logistics@bossexpress-cargo.ru" class="contact-val mono" style="text-decoration:none;color:var(--accent-orange);">logistics@bossexpress-cargo.ru</a>
+              <button type="button" class="btn btn-outline btn-sm" onclick="copyEmail()" id="copyMainEmailBtn" data-i18n="copyBtn">Скопировать</button>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-label" data-i18n="cntHoursLabel">Режим работы операционного офиса</div>
+            <div class="contact-val" data-i18n="cntHoursVal">Москва, Пн–Пт 09:00–19:00 (MSK / UTC+3)</div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-label" data-i18n="cntPayLabel">Валюты контрактов и взаиморасчетов</div>
+            <div class="contact-val mono">RUB • CNY • USD • EUR • AED</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rfq-form-box">
+        <div id="rfqAlert" class="alert-msg"></div>
+        <form id="mainRfqForm" onsubmit="handleMainRfqSubmit(event)">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="rfqCompany" data-i18n="fCompanyLabel">Компания / ИНН</label>
+              <input type="text" id="rfqCompany" required data-i18n-placeholder="fCompanyPh" placeholder="ООО «Вектор Импорт»" />
+            </div>
+            <div class="form-group">
+              <label for="rfqEmail" data-i18n="fEmailLabel">Корпоративный Email</label>
+              <input type="email" id="rfqEmail" required data-i18n-placeholder="fEmailPh" placeholder="logistics@company.ru" />
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="rfqRoute" data-i18n="fRouteLabel">Маршрут (Откуда → Куда)</label>
+              <input type="text" id="rfqRoute" required data-i18n-placeholder="fRoutePh" placeholder="Шанхай → Москва (Ворсино)" />
+            </div>
+            <div class="form-group">
+              <label for="rfqEquip" data-i18n="fEquipLabel">Оборудование / Объем</label>
+              <select id="rfqEquip">
+                <option value="40'HC Container" data-i18n="opt40hc">40'HC Контейнер</option>
+                <option value="20'DC Container" data-i18n="opt20dc">20'DC Контейнер</option>
+                <option value="LCL Consolidation" data-i18n="optLcl">Сборный груз (LCL)</option>
+                <option value="FTL Truck" data-i18n="optFtl">Автофура (FTL 20т / 82–90 м³)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="rfqIncoterms" data-i18n="fIncoLabel">Условия поставки / Сервис</label>
+              <select id="rfqIncoterms">
+                <option value="Door-to-Door (DDP / All-in)" data-i18n="incDoor">Door-to-Door (под ключ с таможней)</option>
+                <option value="FOB / Port-to-Door" data-i18n="incFob">FOB / Порт отправления → Склад в РФ</option>
+                <option value="EXW / FCA Factory Pickup" data-i18n="incExw">EXW / FCA (забор со склада отправителя)</option>
+                <option value="Freight Only" data-i18n="incFreight">Только фрахт до станции / порта РФ</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="rfqPayCurrency" data-i18n="fPayCurrLabel">Предпочтительная валюта оплаты</label>
+              <select id="rfqPayCurrency">
+                <option value="RUB (Безналичный расчет РФ)" data-i18n="payRub">RUB ₽ (Договор с юрлицом РФ)</option>
+                <option value="CNY (Китайский юань)" data-i18n="payCny">CNY ¥ (Китайский юань)</option>
+                <option value="USD (Доллар США)" data-i18n="payUsd">USD $ (Доллар США)</option>
+                <option value="EUR (Евро)" data-i18n="payEur">EUR € (Евро)</option>
+                <option value="AED (Дирхам ОАЭ)" data-i18n="payAed">AED د.إ (Дирхам ОАЭ)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="rfqDetails" data-i18n="fDetailsLabel">Описание груза, вес брутто, код ТН ВЭД и комментарий</label>
+            <textarea id="rfqDetails" rows="4" required data-i18n-placeholder="fDetailsPh" placeholder="Укажите характер груза, вес брутто (кг), количество мест, класс опасности (если есть) и плановую дату готовности..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;" id="rfqSubmitBtn" data-i18n="fSubmitBtn">Отправить заявку в работу</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div style="font-weight:700;font-size:17px;color:#FFFFFF;letter-spacing:0.04em;margin-bottom:6px;">BOSS EXPRESS LLC</div>
+          <div style="max-width:440px;color:#94A3B8;" data-i18n="footerDesc">
+            Международная транспортно-экспедиторская компания. Контейнерные, железнодорожные и автомобильные грузоперевозки из Азии, Ближнего Востока и Европы.
+          </div>
+        </div>
+        <div>
+          <div style="font-weight:600;color:#FFFFFF;margin-bottom:6px;" data-i18n="footerContactTitle">Операционный контакт</div>
+          <div><a href="mailto:logistics@bossexpress-cargo.ru" class="mono" style="color:#FDBA74;text-decoration:none;">logistics@bossexpress-cargo.ru</a></div>
+          <div style="margin-top:6px;"><button type="button" class="copy-badge" onclick="openPortal()" data-i18n="navPortal">Личный кабинет клиента</button></div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 BOSS EXPRESS LLC (ООО «БОССЭКСПРЕСС»). <span data-i18n="footerRights">Все права защищены.</span></span>
+        <span class="mono">bossexpress-cargo.ru</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CLIENT & ADMIN PORTAL MODAL -->
+  <div class="portal-overlay" id="portalOverlay">
+    <div class="portal-modal">
+      <div class="portal-header">
+        <div class="portal-title-group">
+          <span style="font-weight:700;font-size:16px;letter-spacing:0.03em;">BOSS EXPRESS</span>
+          <span class="portal-badge" data-i18n="portalBadge">CLIENT PORTAL</span>
+        </div>
+        <button type="button" class="portal-close" onclick="closePortal()" aria-label="Close">×</button>
+      </div>
+
+      <!-- Auth View -->
+      <div id="portalAuthView">
+        <div class="auth-box">
+          <h3 style="margin-bottom:6px;color:var(--navy-900);" data-i18n="authTitle">Вход в личный кабинет</h3>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:18px;" data-i18n="authSub">
+            Отслеживание контейнеров, статусы таможенного оформления, счета и закрывающие документы.
+          </p>
+
+          <div class="auth-tabs">
+            <button type="button" class="auth-tab active" id="tabLogin" onclick="switchAuthMode('login')" data-i18n="authTabLogin">Вход</button>
+            <button type="button" class="auth-tab" id="tabSignup" onclick="switchAuthMode('signup')" data-i18n="authTabSignup">Регистрация</button>
+          </div>
+
+          <div id="authAlert" class="alert-msg"></div>
+
+          <form onsubmit="handleAuthSubmit(event)">
+            <div class="form-group">
+              <label for="authEmail">Email</label>
+              <input type="email" id="authEmail" required placeholder="name@company.ru" />
+            </div>
+            <div class="form-group">
+              <label for="authPassword" data-i18n="authPassLabel">Пароль</label>
+              <input type="password" id="authPassword" required minlength="6" placeholder="••••••••" />
+            </div>
+            <button type="submit" class="btn btn-navy" style="width:100%;" id="authSubmitBtn" data-i18n="authBtnLogin">Войти в кабинет</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Authenticated Workspace View -->
+      <div id="portalWorkspaceView" style="display:none;" class="portal-body">
+        <div class="portal-toolbar">
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);" data-i18n="pLoggedAs">Вы вошли как:</div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <strong class="mono" id="userEmailDisplay" style="color:var(--navy-900);"></strong>
+              <span id="adminRoleTag" class="sla-tag mono" style="display:none;">ADMIN • DISPATCHER</span>
+            </div>
+          </div>
+
+          <div class="portal-nav-tabs">
+            <button type="button" class="p-tab active" id="pTabShipments" onclick="switchPortalTab('shipments')" data-i18n="pTabShipments">Мои перевозки</button>
+            <button type="button" class="p-tab" id="pTabNewOrder" onclick="switchPortalTab('newOrder')" data-i18n="pTabNewOrder">+ Новая заявка</button>
+            <button type="button" class="p-tab" id="pTabRfqList" style="display:none;" onclick="switchPortalTab('rfqList')" data-i18n="pTabRfqList">Входящие RFQ (Админ)</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="handleLogout()" data-i18n="pLogout">Выйти</button>
+          </div>
+        </div>
+
+        <div id="portalMsg" class="alert-msg"></div>
+
+        <!-- Tab 1: Shipments & Admin Create/Edit -->
+        <div id="viewShipments">
+          <!-- Admin Create Shipment Form -->
+          <div id="adminCreateBox" class="admin-panel-card" style="display:none;">
+            <h4 style="color:var(--navy-900);margin-bottom:12px;" data-i18n="admCreateTitle">Панель диспетчера: Добавить отгрузку клиенту</h4>
+            <form onsubmit="handleAdminCreateShipment(event)">
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label data-i18n="admClientEmail">Email клиента (владельца груза)</label>
+                  <input type="email" id="admClientEmail" required placeholder="client@company.ru" />
+                </div>
+                <div class="form-group">
+                  <label data-i18n="admTrackNo">Номер букинга / заявки</label>
+                  <input type="text" id="admTrackNo" required placeholder="BE-2026-104" />
+                </div>
+              </div>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label data-i18n="admRoute">Маршрут</label>
+                  <input type="text" id="admRoute" required placeholder="Ningbo → Moscow (Vorsino)" />
+                </div>
+                <div class="form-group">
+                  <label data-i18n="admContainer">Номер контейнера / ТС</label>
+                  <input type="text" id="admContainer" placeholder="MSKU9048210 / 40'HC" />
+                </div>
+              </div>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label data-i18n="admStatus">Текущий статус</label>
+                  <select id="admStatus">
+                    <option value="Booking">Booking (Букирование)</option>
+                    <option value="At Port / Station">At Port / Station (В порту / на станции)</option>
+                    <option value="In Transit">In Transit (В пути)</option>
+                    <option value="Customs Clearance">Customs Clearance (Таможня)</option>
+                    <option value="Delivered">Delivered (Доставлен)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label data-i18n="admEta">Плановая дата прибытия (ETA)</label>
+                  <input type="date" id="admEta" />
+                </div>
+              </div>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label data-i18n="admDocName">Название документа (опционально)</label>
+                  <input type="text" id="admDocName" placeholder="Bill of Lading / Invoice PDF" />
+                </div>
+                <div class="form-group">
+                  <label data-i18n="admDocUrl">Ссылка на файл (Google Drive / PDF URL)</label>
+                  <input type="url" id="admDocUrl" placeholder="https://..." />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm" data-i18n="admCreateBtn">Создать отгрузку в базе</button>
+            </form>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="pThTrack">Букинг №</th>
+                  <th data-i18n="pThRoute">Маршрут и контейнер</th>
+                  <th data-i18n="pThStatus">Статус перевозки</th>
+                  <th data-i18n="pThEta">ETA</th>
+                  <th data-i18n="pThDocs">Документы</th>
+                  <th id="pThAdminCol" style="display:none;" data-i18n="pThManage">Управление</th>
+                </tr>
+              </thead>
+              <tbody id="shipmentsTbody">
+                <tr><td colspan="6" style="text-align:center;color:var(--text-muted);" data-i18n="pLoading">Загрузка данных...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 2: Client Create New Order inside Portal -->
+        <div id="viewNewOrder" style="display:none;max-width:680px;">
+          <h4 style="color:var(--navy-900);margin-bottom:14px;" data-i18n="pNewOrderTitle">Оформить новую заявку на перевозку</h4>
+          <form onsubmit="handlePortalOrderSubmit(event)">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label data-i18n="fCompanyLabel">Компания / ИНН</label>
+                <input type="text" id="pOrderCompany" required placeholder="ООО «Компания»" />
+              </div>
+              <div class="form-group">
+                <label data-i18n="fRouteLabel">Маршрут (Откуда → Куда)</label>
+                <input type="text" id="pOrderRoute" required placeholder="Шэньчжэнь → Москва" />
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label data-i18n="fEquipLabel">Оборудование / Объем</label>
+                <select id="pOrderEquip">
+                  <option value="40'HC Container" data-i18n="opt40hc">40'HC Контейнер</option>
+                  <option value="20'DC Container" data-i18n="opt20dc">20'DC Контейнер</option>
+                  <option value="LCL Consolidation" data-i18n="optLcl">Сборный груз (LCL)</option>
+                  <option value="FTL Truck" data-i18n="optFtl">Автофура (FTL 20т / 82–90 м³)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label data-i18n="fPayCurrLabel">Предпочтительная валюта оплаты</label>
+                <select id="pOrderCurr">
+                  <option value="RUB">RUB ₽</option>
+                  <option value="CNY">CNY ¥</option>
+                  <option value="USD">USD $</option>
+                  <option value="EUR">EUR €</option>
+                  <option value="AED">AED د.إ</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label data-i18n="fDetailsLabel">Описание груза, вес брутто, код ТН ВЭД</label>
+              <textarea id="pOrderDetails" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" data-i18n="pOrderBtn">Отправить заявку менеджеру</button>
+          </form>
+        </div>
+
+        <!-- Tab 3: Admin View All Incoming RFQ -->
+        <div id="viewRfqList" style="display:none;">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="rThDate">Дата</th>
+                  <th data-i18n="rThClient">Компания / Email</th>
+                  <th data-i18n="rThRoute">Маршрут и тип</th>
+                  <th data-i18n="rThCurr">Валюта</th>
+                  <th data-i18n="rThDetails">Параметры груза</th>
+                </tr>
+              </thead>
+              <tbody id="adminRfqTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. SUPABASE INITIALIZATION
+    // ==========================================
+    const SUPABASE_URL = 'https://rqvyuvhdvqblmnrvezid.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_Q2lnMdTqm-hi2u-KqzNDgg_ZeOJF_nI';
+    const ADMIN_EMAIL = 'logistics@bossexpress-cargo.ru';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let authMode = 'login';
+    let currentLang = 'ru';
+    let currentCurrency = 'USD';
+
+    // Indicative FX rates relative to 1 USD
+    const fxRates = {
+      USD: { rate: 1, symbol: '$', position: 'before' },
+      CNY: { rate: 7.25, symbol: '¥', position: 'before' },
+      RUB: { rate: 96.5, symbol: ' ₽', position: 'after' },
+      EUR: { rate: 0.92, symbol: '€', position: 'before' }
+    };
+
+    function formatMoney(usdAmount) {
+      const cfg = fxRates[currentCurrency];
+      const converted = Math.round(usdAmount * cfg.rate);
+      const formatted = converted.toLocaleString('en-US');
+      return cfg.position === 'before' ? `${cfg.symbol}${formatted}` : `${formatted}${cfg.symbol}`;
+    }
+
+    // ==========================================
+    // 2. TRANSLATIONS (100% RU / EN)
+    // ==========================================
+    const i18n = {
+      ru: {
+        topStatus: 'Операционный деск Москва: 09:00–19:00 (MSK / UTC+3)',
+        topModes: 'МОРЕ • ЖД • АВТО • МУЛЬТИМОДАЛЬНЫЕ ПЕРЕВОЗКИ',
+        brandSub: 'Международная логистика',
+        navServices: 'Сервисы',
+        navRegions: 'География',
+        navCalc: 'Калькулятор',
+        navCorridors: 'Коридоры',
+        navContact: 'Контакты и RFQ',
+        navPortal: 'Личный кабинет',
+        navPortalActive: 'Кабинет (Активен)',
+        heroEyebrow: 'МЕЖДУНАРОДНАЯ ЭКСПЕДИТОРСКАЯ КОМПАНИЯ',
+        heroTitle: 'Мультимодальная контейнерная и наземная логистика для B2B-поставок',
+        heroDesc: 'Организуем морские (FCL/LCL), железнодорожные и автомобильные перевозки из Китая, Турции, ОАЭ, Индии, Юго-Восточной Азии и Европы в Россию с таможенным оформлением и прозрачными мультивалютными расчетами.',
+        heroCtaCalc: 'Рассчитать стоимость',
+        heroCtaPortal: 'Отследить груз в кабинете',
+        metric1: 'Международных торговых регионов',
+        metric2: 'Валют расчетов (RUB, CNY, USD, EUR, AED)',
+        metric3: 'Расчет ставки по запросу RFQ',
+        quickTitle: 'Экспресс-запрос ставки',
+        hqRouteLabel: 'Маршрут (Откуда → Куда)',
+        hqRoutePh: 'Например: Нинбо → Москва (Ворсино)',
+        hqEquipLabel: 'Тип оборудования / загрузки',
+        opt40hc: "40'HC Контейнер",
+        opt20dc: "20'DC Контейнер",
+        optLcl: 'Сборный груз (LCL)',
+        optFtl: 'Автофура (FTL 20т / 82–90 м³)',
+        hqWeightLabel: 'Вес брутто / Объем / Наименование',
+        hqWeightPh: '18 500 кг, оборудование (код ТН ВЭД)',
+        hqContactLabel: 'Корпоративный Email или телефон',
+        hqContactPh: 'name@company.ru / +7...',
+        hqSubmitBtn: 'Получить расчет ставки',
+        srvEyebrow: 'КОМПЕТЕНЦИИ',
+        srvTitle: 'Ключевые экспедиторские сервисы',
+        srvLead: 'Проектируем оптимальные цепочки поставок на базе морского, железнодорожного и автомобильного транспорта под ваш бюджет и сроки контракта.',
+        srv1Title: 'Морские контейнерные перевозки',
+        srv1Desc: 'Регулярные фидерные и океанские сервисы из портов Китая (Нинбо, Шанхай, Шэньчжэнь, Циндао), Турции (Стамбул, Мерсин), ОАЭ (Джебель-Али) и Индии (Нава-Шева) через Владивосток, Восточный, Новороссийск и Санкт-Петербург.',
+        srv1Tag: "20'DC / 40'HC / LCL",
+        srv1Time: '22–38 дней',
+        srv2Title: 'Железнодорожные контейнерные поезда',
+        srv2Desc: 'Ускоренные блок-поезда из основных промышленных кластеров Китая через погранпереходы Забайкальск, Достык, Алтынколь и Эрлянь напрямую на терминалы Московского узла и регионов РФ.',
+        srv2Tag: 'Прямое ЖД + Море-ЖД',
+        srv2Time: '16–24 дня',
+        srv3Title: 'Международные автоперевозки и вывоз',
+        srv3Desc: 'Прямые тентованные и рефрижераторные фуры из Китая и Турции, транзитные маршруты из Европы, а также портовый и терминальный контейнеровозный вывоз до склада получателя.',
+        srv3Tag: 'Door-to-Door по РФ',
+        srv3Time: '14–22 дня',
+        srv4Title: 'Таможенное оформление и ВЭД-сопровождение',
+        srv4Desc: 'Подбор кодов ТН ВЭД, проверка товаросопроводительных документов до отгрузки, подача деклараций на постах ЦЭД, сертификация и полный пакет закрывающих документов для бухгалтерии.',
+        srv4Tag: 'Импорт / Экспорт / ВТТ',
+        srv4Time: '1–2 рабочих дня',
+        currBannerTitle: 'Гибкие мультивалютные расчеты и прозрачный документооборот',
+        currBannerDesc: 'Работаем по безналичным договорам с юридическими лицами РФ (оплата в RUB с закрывающими документами) и поддерживаем расчеты с зарубежными отправителями и агентами в иностранной валюте.',
+        regEyebrow: 'ГЕОГРАФИЯ ПОСТАВОК',
+        regTitle: 'Международные направления работы',
+        regLead: 'Агентская сеть в ключевых экспортных хабах позволяет забирать груз на условиях EXW/FCA со склада поставщика и контролировать погрузку.',
+        reg1Name: 'Китай (КНР)',
+        reg1Ports: 'Шанхай, Нинбо, Шэньчжэнь, Гуанчжоу, Циндао, Тяньцзинь, Иу',
+        reg1Modes: 'Море + ЖД • Прямое ЖД • Прямое Авто',
+        reg2Name: 'Турция',
+        reg2Ports: 'Стамбул (Амбарли), Мерсин, Измир, Бурса',
+        reg2Modes: 'Море на Новороссийск • Прямое Авто FTL/LTL',
+        reg3Name: 'ОАЭ и Ближний Восток',
+        reg3Ports: 'Дубай (Джебель-Али), Абу-Даби, Шарджа',
+        reg3Modes: 'Море (Новороссийск / СПБ) • Реэкспортные хабы',
+        reg4Name: 'Индия',
+        reg4Ports: 'Нава-Шева (Мумбаи), Мундра, Ченнаи',
+        reg4Modes: 'Море FCL/LCL • Коридор Север–Юг',
+        reg5Name: 'Юго-Восточная Азия и Корея',
+        reg5Ports: 'Хошимин, Хайфон, Пусан, Бангкок, Порт-Кланг',
+        reg5Modes: 'Море через Владивосток / Восточный + ЖД',
+        reg6Name: 'Европа (транзитные маршруты)',
+        reg6Ports: 'Консолидационные склады в Прибалтике, Польше, Германии, Италии',
+        reg6Modes: 'Авто FTL/LTL с перецепкой • Контейнерный сервис',
+        calcEyebrow: 'ОНЛАЙН-ОЦЕНКА БЮДЖЕТА',
+        calcTitle: 'Интерактивный калькулятор фрахта',
+        calcLead: 'Выберите регион отправления, вид транспорта, тип контейнера и валюту отображения для предварительного расчета стоимости.',
+        calcBarTitle: 'Параметры мультимодальной перевозки',
+        calcCurrLabel: 'Валюта расчета:',
+        cOriginLabel: 'Регион / Порт отправления',
+        origCnEast: 'Китай — Восточный (Шанхай / Нинбо)',
+        origCnSouth: 'Китай — Южный (Шэньчжэнь / Гуанчжоу)',
+        origTr: 'Турция (Стамбул / Мерсин)',
+        origAe: 'ОАЭ (Джебель-Али)',
+        origIn: 'Индия (Нава-Шева / Мундра)',
+        origSea: 'ЮВА / Корея (Хошимин / Пусан)',
+        origEu: 'Европа (Консолидационный хаб ЕС)',
+        cDestLabel: 'Пункт назначения в РФ',
+        destMsk: 'Москва и МО (Ворсино / Селятино / Электроугли)',
+        destSpb: 'Санкт-Петербург и СЗФО',
+        destEkb: 'Екатеринбург / Урал',
+        destNsk: 'Новосибирск / Сибирь',
+        destKrd: 'Краснодар / ЮФО',
+        cModeLabel: 'Схема перевозки',
+        modeSeaRail: 'Море + ЖД (Мультимодальный)',
+        modeRail: 'Прямой контейнерный поезд (ЖД)',
+        modeSea: 'Море до порта РФ + автовывоз',
+        modeTruck: 'Прямая международная автоперевозка',
+        cEquipLabel: 'Тип оборудования',
+        eq40hc: "40'HC (High Cube)",
+        eq20dc: "20'DC (Standard)",
+        eqLcl: 'LCL (Сборный груз, до 10 м³)',
+        eqFtl: 'FTL (Еврофура 82–90 м³)',
+        cEstLabel: 'ОРИЕНТИРОВОЧНАЯ СТАВКА',
+        cDisclaimer: 'Индикативный расчет. Финальная котировка зависит от даты готовности груза, веса брутто и условий Инкотермс. Оплата возможна в RUB, CNY, USD, EUR или AED.',
+        cTransferBtn: 'Зафиксировать расчет в заявке',
+        corEyebrow: 'СВОДКА НАПРАВЛЕНИЙ',
+        corTitle: 'Основные торговые коридоры и сроки',
+        corCurrLabel: 'Валюта в таблице:',
+        thCorridor: 'Коридор',
+        thHubs: 'Порты / Погранпереходы',
+        thMode: 'Вид транспорта',
+        thTransit: 'Транзитное время',
+        thRate: "Ориентир 40'HC / FTL",
+        rfqEyebrow: 'КОММЕРЧЕСКИЙ ОТДЕЛ',
+        rfqTitle: 'Запрос коммерческого предложения (RFQ)',
+        rfqLead: 'Направьте параметры вашей партии — специалист подготовит детальный расчет с разбивкой по плечам перевозки и терминальным расходам.',
+        cntLegalLabel: 'Юридическое лицо',
+        cntEmailLabel: 'Единый отдел котировок и логистики',
+        copyBtn: 'Скопировать',
+        copiedBtn: 'Скопировано!',
+        cntHoursLabel: 'Режим работы операционного офиса',
+        cntHoursVal: 'Москва, Пн–Пт 09:00–19:00 (MSK / UTC+3)',
+        cntPayLabel: 'Валюты контрактов и взаиморасчетов',
+        fCompanyLabel: 'Компания / ИНН',
+        fCompanyPh: 'ООО «Вектор Импорт»',
+        fEmailLabel: 'Корпоративный Email',
+        fEmailPh: 'logistics@company.ru',
+        fRouteLabel: 'Маршрут (Откуда → Куда)',
+        fRoutePh: 'Шанхай → Москва (Ворсино)',
+        fEquipLabel: 'Оборудование / Объем',
+        fIncoLabel: 'Условия поставки / Сервис',
+        incDoor: 'Door-to-Door (под ключ с таможней)',
+        incFob: 'FOB / Порт отправления → Склад в РФ',
+        incExw: 'EXW / FCA (забор со склада отправителя)',
+        incFreight: 'Только фрахт до станции / порта РФ',
+        fPayCurrLabel: 'Предпочтительная валюта оплаты',
+        payRub: 'RUB ₽ (Договор с юрлицом РФ)',
+        payCny: 'CNY ¥ (Китайский юань)',
+        payUsd: 'USD $ (Доллар США)',
+        payEur: 'EUR € (Евро)',
+        payAed: 'AED د.إ (Дирхам ОАЭ)',
+        fDetailsLabel: 'Описание груза, вес брутто, код ТН ВЭД и комментарий',
+        fDetailsPh: 'Укажите характер груза, вес брутто (кг), количество мест, класс опасности (если есть) и плановую дату готовности...',
+        fSubmitBtn: 'Отправить заявку в работу',
+        rfqSuccessMsg: 'Заявка успешно зарегистрирована в системе и подготовлена к отправке на logistics@bossexpress-cargo.ru.',
+        footerDesc: 'Международная транспортно-экспедиторская компания. Контейнерные, железнодорожные и автомобильные грузоперевозки из Азии, Ближнего Востока и Европы.',
+        footerContactTitle: 'Операционный контакт',
+        footerRights: 'Все права защищены.',
+        portalBadge: 'ЛИЧНЫЙ КАБИНЕТ',
+        authTitle: 'Вход в личный кабинет',
+        authSub: 'Отслеживание контейнеров, статусы таможенного оформления, счета и закрывающие документы.',
+        authTabLogin: 'Вход',
+        authTabSignup: 'Регистрация',
+        authPassLabel: 'Пароль',
+        authBtnLogin: 'Войти в кабинет',
+        authBtnSignup: 'Создать аккаунт клиента',
+        pLoggedAs: 'Вы вошли как:',
+        pTabShipments: 'Мои перевозки',
+        pTabNewOrder: '+ Новая заявка',
+        pTabRfqList: 'Входящие RFQ (Админ)',
+        pLogout: 'Выйти',
+        admCreateTitle: 'Панель диспетчера: Добавить отгрузку клиенту',
+        admClientEmail: 'Email клиента (владельца груза)',
+        admTrackNo: 'Номер букинга / заявки',
+        admRoute: 'Маршрут',
+        admContainer: 'Номер контейнера / ТС',
+        admStatus: 'Текущий статус',
+        admEta: 'Плановая дата прибытия (ETA)',
+        admDocName: 'Название документа (опционально)',
+        admDocUrl: 'Ссылка на файл (Google Drive / PDF URL)',
+        admCreateBtn: 'Создать отгрузку в базе',
+        pThTrack: 'Букинг №',
+        pThRoute: 'Маршрут и контейнер',
+        pThStatus: 'Статус перевозки',
+        pThEta: 'ETA',
+        pThDocs: 'Документы',
+        pThManage: 'Управление',
+        pLoading: 'Загрузка данных...',
+        pNoShipments: 'Активных отгрузок пока нет. Оформите заявку во вкладке «+ Новая заявка» или свяжитесь с менеджером.',
+        pNewOrderTitle: 'Оформить новую заявку на перевозку',
+        pOrderBtn: 'Отправить заявку менеджеру',
+        rThDate: 'Дата',
+        rThClient: 'Компания / Email',
+        rThRoute: 'Маршрут и тип',
+        rThCurr: 'Валюта',
+        rThDetails: 'Параметры груза'
+      },
+      en: {
+        topStatus: 'Moscow Operations Desk: 09:00–19:00 (MSK / UTC+3)',
+        topModes: 'SEA • RAIL • ROAD • MULTIMODAL FREIGHT',
+        brandSub: 'International Freight Forwarding',
+        navServices: 'Services',
+        navRegions: 'Regions',
+        navCalc: 'Calculator',
+        navCorridors: 'Corridors',
+        navContact: 'Contacts & RFQ',
+        navPortal: 'Client Portal',
+        navPortalActive: 'Portal (Active)',
+        heroEyebrow: 'INTERNATIONAL FREIGHT FORWARDING COMPANY',
+        heroTitle: 'Multimodal Container & Overland Logistics for B2B Supply Chains',
+        heroDesc: 'We engineer Sea (FCL/LCL), Rail, and Road freight solutions from China, Turkey, UAE, India, Southeast Asia, and Europe to Russia with full customs brokerage and transparent multi-currency settlements.',
+        heroCtaCalc: 'Calculate Freight Rate',
+        heroCtaPortal: 'Track Cargo in Portal',
+        metric1: 'Global trade regions covered',
+        metric2: 'Settlement currencies (RUB, CNY, USD, EUR, AED)',
+        metric3: 'Standard RFQ quotation turnaround',
+        quickTitle: 'Express Rate Inquiry',
+        hqRouteLabel: 'Route (Origin → Destination)',
+        hqRoutePh: 'e.g., Ningbo → Moscow (Vorsino)',
+        hqEquipLabel: 'Equipment / Cargo Type',
+        opt40hc: "40'HC Container",
+        opt20dc: "20'DC Container",
+        optLcl: 'LCL Consolidation',
+        optFtl: 'FTL Truck (20t / 82–90 CBM)',
+        hqWeightLabel: 'Gross Weight / Volume / Commodity',
+        hqWeightPh: '18,500 kg, machinery (HS Code)',
+        hqContactLabel: 'Corporate Email or Phone',
+        hqContactPh: 'name@company.com / +1...',
+        hqSubmitBtn: 'Request Freight Quote',
+        srvEyebrow: 'CORE CAPABILITIES',
+        srvTitle: 'Freight Forwarding Services',
+        srvLead: 'We design resilient supply chains combining Ocean, Block Train Rail, and Cross-Border Trucking tailored to your budget and contract lead times.',
+        srv1Title: 'Sea Container Freight (FCL / LCL)',
+        srv1Desc: 'Weekly sailings from major hubs in China (Ningbo, Shanghai, Shenzhen, Qingdao), Turkey (Istanbul, Mersin), UAE (Jebel Ali), and India (Nhava Sheva) via Vladivostok, Vostochny, Novorossiysk, and St. Petersburg.',
+        srv1Tag: "20'DC / 40'HC / LCL",
+        srv1Time: '22–38 days',
+        srv2Title: 'Block Train Rail Freight',
+        srv2Desc: 'Scheduled container block trains from China’s key manufacturing hubs via Zabaikalsk, Dostyk, Altynkol, and Erlian border crossings directly to Moscow and regional rail terminals.',
+        srv2Tag: 'Direct Rail + Sea-Rail',
+        srv2Time: '16–24 days',
+        srv3Title: 'Cross-Border & Last-Mile Trucking',
+        srv3Desc: 'Direct FTL tilt and reefer trucks from China and Turkey, transit corridors from Europe, plus port and rail terminal container drayage straight to your warehouse door.',
+        srv3Tag: 'Door-to-Door Russia',
+        srv3Time: '14–22 days',
+        srv4Title: 'Customs Clearance & Trade Compliance',
+        srv4Desc: 'HS code classification, pre-shipment document audit, electronic customs declaration filing, certification support, and complete accounting documentation.',
+        srv4Tag: 'Import / Export / Transit',
+        srv4Time: '1–2 business days',
+        currBannerTitle: 'Flexible Multi-Currency Settlements & Compliant Documentation',
+        currBannerDesc: 'We operate under formal contracts with Russian legal entities (settlements in RUB with full statutory closing docs) as well as international cross-border settlements with overseas shippers and agents.',
+        regEyebrow: 'GLOBAL COVERAGE',
+        regTitle: 'International Trade Corridors',
+        regLead: 'Our local partner network in key export hubs handles EXW/FCA factory pickups, loading supervision, and export clearance.',
+        reg1Name: 'China (PRC)',
+        reg1Ports: 'Shanghai, Ningbo, Shenzhen, Guangzhou, Qingdao, Tianjin, Yiwu',
+        reg1Modes: 'Sea + Rail • Direct Block Train • Direct FTL Truck',
+        reg2Name: 'Turkey',
+        reg2Ports: 'Istanbul (Ambarli), Mersin, Izmir, Bursa',
+        reg2Modes: 'Sea to Novorossiysk • Direct FTL/LTL Road',
+        reg3Name: 'UAE & Middle East',
+        reg3Ports: 'Dubai (Jebel Ali), Abu Dhabi, Sharjah',
+        reg3Modes: 'Sea (Novorossiysk / St. Petersburg) • Re-export Hubs',
+        reg4Name: 'India',
+        reg4Ports: 'Nhava Sheva (Mumbai), Mundra, Chennai',
+        reg4Modes: 'Sea FCL/LCL • North–South Corridor',
+        reg5Name: 'Southeast Asia & South Korea',
+        reg5Ports: 'Ho Chi Minh, Haiphong, Busan, Bangkok, Port Klang',
+        reg5Modes: 'Sea via Vladivostok / Vostochny + Rail',
+        reg6Name: 'Europe (Transit Corridors)',
+        reg6Ports: 'Consolidation hubs in Baltics, Poland, Germany, Italy',
+        reg6Modes: 'Cross-border FTL/LTL Trucking • Container Service',
+        calcEyebrow: 'ONLINE BUDGET ESTIMATOR',
+        calcTitle: 'Interactive Freight Rate Calculator',
+        calcLead: 'Select origin region, transport mode, container equipment, and display currency to get an indicative freight estimate.',
+        calcBarTitle: 'Multimodal Shipment Parameters',
+        calcCurrLabel: 'Display currency:',
+        cOriginLabel: 'Origin Region / Port',
+        origCnEast: 'China — East (Shanghai / Ningbo)',
+        origCnSouth: 'China — South (Shenzhen / Guangzhou)',
+        origTr: 'Turkey (Istanbul / Mersin)',
+        origAe: 'UAE (Jebel Ali)',
+        origIn: 'India (Nhava Sheva / Mundra)',
+        origSea: 'SE Asia / Korea (Ho Chi Minh / Busan)',
+        origEu: 'Europe (EU Consolidation Hub)',
+        cDestLabel: 'Destination in Russia',
+        destMsk: 'Moscow & Region (Vorsino / Selyatino / Elektrougli)',
+        destSpb: 'St. Petersburg & North-West',
+        destEkb: 'Yekaterinburg / Urals',
+        destNsk: 'Novosibirsk / Siberia',
+        destKrd: 'Krasnodar / South',
+        cModeLabel: 'Transport Mode',
+        modeSeaRail: 'Sea + Rail (Multimodal)',
+        modeRail: 'Direct Container Block Train',
+        modeSea: 'Sea to RU Port + Drayage',
+        modeTruck: 'Direct International FTL Trucking',
+        cEquipLabel: 'Equipment Type',
+        eq40hc: "40'HC (High Cube)",
+        eq20dc: "20'DC (Standard)",
+        eqLcl: 'LCL (Consolidation up to 10 CBM)',
+        eqFtl: 'FTL (Standard Truck 82–90 CBM)',
+        cEstLabel: 'INDICATIVE FREIGHT RATE',
+        cDisclaimer: 'Indicative estimate only. Final quotation depends on cargo readiness date, gross weight, and Incoterms. Settlements available in RUB, CNY, USD, EUR, or AED.',
+        cTransferBtn: 'Transfer Estimate to RFQ Form',
+        corEyebrow: 'CORRIDOR BENCHMARKS',
+        corTitle: 'Key Trade Corridors & Transit Times',
+        corCurrLabel: 'Table currency:',
+        thCorridor: 'Corridor',
+        thHubs: 'Ports / Border Crossings',
+        thMode: 'Transport Mode',
+        thTransit: 'Transit Time',
+        thRate: "Indicative 40'HC / FTL",
+        rfqEyebrow: 'COMMERCIAL DESK',
+        rfqTitle: 'Request for Quotation (RFQ)',
+        rfqLead: 'Submit your cargo specifications — our freight specialist will prepare an itemized quote covering freight legs and terminal handling.',
+        cntLegalLabel: 'Legal Entity',
+        cntEmailLabel: 'Centralized Pricing & Operations Desk',
+        copyBtn: 'Copy',
+        copiedBtn: 'Copied!',
+        cntHoursLabel: 'Operations Desk Hours',
+        cntHoursVal: 'Moscow, Mon–Fri 09:00–19:00 (MSK / UTC+3)',
+        cntPayLabel: 'Contract & Settlement Currencies',
+        fCompanyLabel: 'Company Name / Tax ID',
+        fCompanyPh: 'Global Trade Ltd.',
+        fEmailLabel: 'Corporate Email',
+        fEmailPh: 'logistics@company.com',
+        fRouteLabel: 'Route (Origin → Destination)',
+        fRoutePh: 'Shanghai → Moscow (Vorsino)',
+        fEquipLabel: 'Equipment / Volume',
+        fIncoLabel: 'Service Scope / Incoterms',
+        incDoor: 'Door-to-Door (All-in with Customs)',
+        incFob: 'FOB / Origin Port → Russia Warehouse',
+        incExw: 'EXW / FCA (Factory Pickup)',
+        incFreight: 'Freight Only to RU Port / Rail Hub',
+        fPayCurrLabel: 'Preferred Payment Currency',
+        payRub: 'RUB ₽ (Russian Legal Entity Contract)',
+        payCny: 'CNY ¥ (Chinese Yuan)',
+        payUsd: 'USD $ (US Dollar)',
+        payEur: 'EUR € (Euro)',
+        payAed: 'AED د.إ (UAE Dirham)',
+        fDetailsLabel: 'Cargo Description, Gross Weight, HS Code & Notes',
+        fDetailsPh: 'Specify commodity, gross weight (kg), package count, DG class (if any), and cargo readiness date...',
+        fSubmitBtn: 'Submit RFQ Inquiry',
+        rfqSuccessMsg: 'Your RFQ has been recorded in our system and prepared for dispatch to logistics@bossexpress-cargo.ru.',
+        footerDesc: 'International Freight Forwarding Company. Containerized Sea, Block Train Rail, and Cross-Border Road freight from Asia, Middle East, and Europe.',
+        footerContactTitle: 'Operations Contact',
+        footerRights: 'All rights reserved.',
+        portalBadge: 'CLIENT PORTAL',
+        authTitle: 'Client Portal Sign In',
+        authSub: 'Live container tracking, customs clearance statuses, invoices, and shipping documents.',
+        authTabLogin: 'Sign In',
+        authTabSignup: 'Register',
+        authPassLabel: 'Password',
+        authBtnLogin: 'Sign In to Portal',
+        authBtnSignup: 'Create Client Account',
+        pLoggedAs: 'Signed in as:',
+        pTabShipments: 'My Shipments',
+        pTabNewOrder: '+ New Order',
+        pTabRfqList: 'Incoming RFQs (Admin)',
+        pLogout: 'Sign Out',
+        admCreateTitle: 'Dispatcher Console: Add Shipment for Client',
+        admClientEmail: 'Client Email (Cargo Owner)',
+        admTrackNo: 'Booking / Tracking Number',
+        admRoute: 'Route',
+        admContainer: 'Container / Truck No.',
+        admStatus: 'Current Status',
+        admEta: 'Estimated Arrival (ETA)',
+        admDocName: 'Document Title (optional)',
+        admDocUrl: 'Document Link (Google Drive / PDF URL)',
+        admCreateBtn: 'Create Shipment Record',
+        pThTrack: 'Booking No.',
+        pThRoute: 'Route & Container',
+        pThStatus: 'Shipment Status',
+        pThEta: 'ETA',
+        pThDocs: 'Documents',
+        pThManage: 'Manage',
+        pLoading: 'Loading records...',
+        pNoShipments: 'No active shipments found yet. Submit a new booking under "+ New Order" or contact our operations desk.',
+        pNewOrderTitle: 'Submit New Shipment Order',
+        pOrderBtn: 'Submit Order to Operations',
+        rThDate: 'Date',
+        rThClient: 'Company / Email',
+        rThRoute: 'Route & Equipment',
+        rThCurr: 'Currency',
+        rThDetails: 'Cargo Details'
+      }
+    };
+
+    const corridorBenchmarks = [
+      {
+        corridorRu: 'Китай → Москва / ЦФО',
+        corridorEn: 'China → Moscow / Central RU',
+        hubsRu: 'Нинбо / Шанхай → Владивосток → Ворсино',
+        hubsEn: 'Ningbo / Shanghai → Vladivostok → Vorsino',
+        modeRu: 'Море + ЖД (Мультимодальный)',
+        modeEn: 'Sea + Rail (Multimodal)',
+        transitRu: '26–32 дня',
+        transitEn: '26–32 days',
+        usdBase: 4350
+      },
+      {
+        corridorRu: 'Китай → Москва (Прямое ЖД)',
+        corridorEn: 'China → Moscow (Direct Rail)',
+        hubsRu: 'Иу / Чэнду / Сучжоу → Забайкальск / Достык',
+        hubsEn: 'Yiwu / Chengdu / Suzhou → Zabaikalsk / Dostyk',
+        modeRu: 'Ускоренный контейнерный поезд',
+        modeEn: 'Express Container Block Train',
+        transitRu: '16–22 дня',
+        transitEn: '16–22 days',
+        usdBase: 5100
+      },
+      {
+        corridorRu: 'Турция → Москва / ЮФО',
+        corridorEn: 'Turkey → Moscow / South RU',
+        hubsRu: 'Стамбул / Мерсин → Новороссийск / Верхний Ларс',
+        hubsEn: 'Istanbul / Mersin → Novorossiysk / Verkhny Lars',
+        modeRu: 'Море + Вывоз / Прямое Авто FTL',
+        modeEn: 'Sea + Drayage / Direct FTL Truck',
+        transitRu: '14–20 дней',
+        transitEn: '14–20 days',
+        usdBase: 3900
+      },
+      {
+        corridorRu: 'ОАЭ → Москва / Санкт-Петербург',
+        corridorEn: 'UAE → Moscow / St. Petersburg',
+        hubsRu: 'Джебель-Али → Новороссийск / Бронка',
+        hubsEn: 'Jebel Ali → Novorossiysk / Bronka',
+        modeRu: 'Морской сервис FCL + Автовывоз',
+        modeEn: 'Ocean FCL + Container Drayage',
+        transitRu: '24–30 дней',
+        transitEn: '24–30 days',
+        usdBase: 4450
+      },
+      {
+        corridorRu: 'Индия → Москва / СЗФО',
+        corridorEn: 'India → Moscow / North-West RU',
+        hubsRu: 'Нава-Шева / Мундра → Новороссийск / СПБ',
+        hubsEn: 'Nhava Sheva / Mundra → Novorossiysk / SPB',
+        modeRu: 'Море + ЖД / Автодоставка',
+        modeEn: 'Sea + Rail / Road Delivery',
+        transitRu: '28–35 дней',
+        transitEn: '28–35 days',
+        usdBase: 4600
+      },
+      {
+        corridorRu: 'Европа → Москва (Транзит)',
+        corridorEn: 'Europe → Moscow (Transit)',
+        hubsRu: 'Вильнюс / Рига / Брест → Москва',
+        hubsEn: 'Vilnius / Riga / Brest → Moscow',
+        modeRu: 'Международная автофура FTL',
+        modeEn: 'Cross-Border FTL Trucking',
+        transitRu: '10–16 дней',
+        transitEn: '10–16 days',
+        usdBase: 4800
+      }
+    ];
+
+    function renderCorridorsTable() {
+      const tbody = document.getElementById('corridorsTbody');
+      tbody.innerHTML = corridorBenchmarks.map(row => `
+        <tr>
+          <td style="font-weight:600;color:var(--navy-900);">${currentLang === 'ru' ? row.corridorRu : row.corridorEn}</td>
+          <td style="color:var(--text-secondary);">${currentLang === 'ru' ? row.hubsRu : row.hubsEn}</td>
+          <td>${currentLang === 'ru' ? row.modeRu : row.modeEn}</td>
+          <td class="mono" style="color:var(--accent-orange);font-weight:600;">${currentLang === 'ru' ? row.transitRu : row.transitEn}</td>
+          <td class="mono" style="font-weight:700;color:var(--navy-900);">${formatMoney(row.usdBase)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+      const dict = i18n[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.textContent = dict[key];
+        }
+      });
+
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key]) {
+          el.setAttribute('placeholder', dict[key]);
+        }
+      });
+
+      if (currentUser) {
+        document.getElementById('portalHeaderBtn').textContent = dict.navPortalActive;
+      }
+
+      renderCorridorsTable();
+      recalculate();
+      if (currentUser) {
+        loadShipments();
+      }
+    }
+
+    function setCurrency(curr) {
+      currentCurrency = curr;
+      document.querySelectorAll('.curr-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.startsWith(curr));
+      });
+      renderCorridorsTable();
+      recalculate();
+    }
+
+    // ==========================================
+    // 3. FREIGHT CALCULATOR LOGIC
+    // ==========================================
+    function recalculate() {
+      const origin = document.getElementById('calcOrigin').value;
+      const dest = document.getElementById('calcDest').value;
+      const mode = document.getElementById('calcMode').value;
+      const equip = document.getElementById('calcEquip').value;
+
+      const originBaseUsd = {
+        cn_east: 4200,
+        cn_south: 4350,
+        tr: 3750,
+        ae: 4300,
+        in: 4500,
+        sea: 4650,
+        eu: 4700
+      };
+
+      const destAdderUsd = {
+        msk: 0,
+        spb: 150,
+        ekb: -150,
+        nsk: -250,
+        krd: 100
+      };
+
+      const modeMult = {
+        sea_rail: 1.0,
+        direct_rail: 1.18,
+        sea_only: 0.94,
+        truck: 1.12
+      };
+
+      const equipMult = {
+        '40hc': 1.0,
+        '20dc': 0.72,
+        'lcl': 0.34,
+        'ftl': 1.05
+      };
+
+      const transitMap = {
+        sea_rail: currentLang === 'ru' ? '26–32 дн.' : '26–32 days',
+        direct_rail: currentLang === 'ru' ? '16–22 дн.' : '16–22 days',
+        sea_only: currentLang === 'ru' ? '24–34 дн.' : '24–34 days',
+        truck: currentLang === 'ru' ? '14–20 дн.' : '14–20 days'
+      };
+
+      const totalUsd = (originBaseUsd[origin] + destAdderUsd[dest]) * modeMult[mode] * equipMult[equip];
+      const formattedPrice = formatMoney(totalUsd);
+      document.getElementById('calcPriceOutput').textContent = formattedPrice;
+
+      const originText = document.getElementById('calcOrigin').selectedOptions[0].textContent;
+      const destText = document.getElementById('calcDest').selectedOptions[0].textContent.split('(')[0].trim();
+      const modeText = document.getElementById('calcMode').selectedOptions[0].textContent;
+      const equipText = document.getElementById('calcEquip').selectedOptions[0].textContent;
+
+      document.getElementById('calcSummaryText').textContent =
+        `${originText} → ${destText} • ${modeText} • ${equipText} • ~${transitMap[mode]}`;
+    }
+
+    function transferCalcToRfq() {
+      const originText = document.getElementById('calcOrigin').selectedOptions[0].textContent;
+      const destText = document.getElementById('calcDest').selectedOptions[0].textContent;
+      const summary = document.getElementById('calcSummaryText').textContent;
+      const est = document.getElementById('calcPriceOutput').textContent;
+
+      document.getElementById('rfqRoute').value = `${originText} → ${destText}`;
+      const prefix = currentLang === 'ru'
+        ? `Предварительный расчет на сайте: ${est} (${summary}). Прошу подтвердить актуальную ставку:`
+        : `Website calculator estimate: ${est} (${summary}). Please confirm firm rate:`;
+      document.getElementById('rfqDetails').value = prefix + '
+';
+
+      document.getElementById('rfq').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // 4. COPY EMAIL & PUBLIC RFQ SUBMISSION (SUPABASE + MAILTO)
+    // ==========================================
+    function copyEmail() {
+      navigator.clipboard.writeText(ADMIN_EMAIL);
+      const topBtn = document.getElementById('copyTopEmail');
+      const mainBtn = document.getElementById('copyMainEmailBtn');
+      topBtn.textContent = '✓';
+      if (mainBtn) mainBtn.textContent = i18n[currentLang].copiedBtn;
+      setTimeout(() => {
+        topBtn.textContent = 'Copy';
+        if (mainBtn) mainBtn.textContent = i18n[currentLang].copyBtn;
+      }, 2000);
+    }
+
+    async function handleQuickSubmit(e) {
+      e.preventDefault();
+      const route = document.getElementById('hqRoute').value;
+      const equip = document.getElementById('hqEquip').value;
+      const weight = document.getElementById('hqWeight').value;
+      const contact = document.getElementById('hqContact').value;
+
+      // Save to Supabase rfq_requests table
+      await sb.from('rfq_requests').insert([{
+        company_name: 'Express Web Inquiry',
+        email: contact,
+        route: route,
+        equipment: equip,
+        cargo_details: weight,
+        payment_currency: currentCurrency
+      }]);
+
+      const subject = encodeURIComponent(`Express RFQ: ${route} (${equip})`);
+      const body = encodeURIComponent(`Route: ${route}
+Equipment: ${equip}
+Cargo & Weight: ${weight}
+Contact: ${contact}`);
+      window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
+      e.target.reset();
+    }
+
+    async function handleMainRfqSubmit(e) {
+      e.preventDefault();
+      const company = document.getElementById('rfqCompany').value;
+      const email = document.getElementById('rfqEmail').value;
+      const route = document.getElementById('rfqRoute').value;
+      const equip = document.getElementById('rfqEquip').value;
+      const inco = document.getElementById('rfqIncoterms').value;
+      const payCurr = document.getElementById('rfqPayCurrency').value;
+      const details = document.getElementById('rfqDetails').value;
+
+      const alertBox = document.getElementById('rfqAlert');
+
+      const { error } = await sb.from('rfq_requests').insert([{
+        company_name: company,
+        email: email,
+        route: route,
+        equipment: `${equip} | ${inco}`,
+        cargo_details: details,
+        payment_currency: payCurr
+      }]);
+
+      if (error) {
+        alertBox.className = 'alert-msg error';
+        alertBox.textContent = error.message;
+        return;
+      }
+
+      alertBox.className = 'alert-msg success';
+      alertBox.textContent = i18n[currentLang].rfqSuccessMsg;
+
+      const subject = encodeURIComponent(`RFQ [${company}]: ${route}`);
+      const body = encodeURIComponent(
+        `Company: ${company}
+Email: ${email}
+Route: ${route}
+Equipment: ${equip}
+Incoterms: ${inco}
+Payment Currency: ${payCurr}
+
+Details:
+${details}`
+      );
+      window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
+      e.target.reset();
+    }
+
+    // ==========================================
+    // 5. CLIENT PORTAL & SUPABASE AUTH / CRUD
+    // ==========================================
+    function openPortal() {
+      document.getElementById('portalOverlay').classList.add('open');
+      checkSession();
+    }
+
+    function closePortal() {
+      document.getElementById('portalOverlay').classList.remove('open');
+    }
+
+    function switchAuthMode(mode) {
+      authMode = mode;
+      document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+      document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
+      document.getElementById('authSubmitBtn').textContent =
+        mode === 'login' ? i18n[currentLang].authBtnLogin : i18n[currentLang].authBtnSignup;
+      document.getElementById('authAlert').className = 'alert-msg';
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const alertBox = document.getElementById('authAlert');
+      alertBox.className = 'alert-msg';
+
+      let res;
+      if (authMode === 'login') {
+        res = await sb.auth.signInWithPassword({ email, password });
+      } else {
+        res = await sb.auth.signUp({ email, password });
+      }
+
+      if (res.error) {
+        alertBox.className = 'alert-msg error';
+        alertBox.textContent = res.error.message;
+        return;
+      }
+
+      if (authMode === 'signup' && !res.data.session) {
+        alertBox.className = 'alert-msg success';
+        alertBox.textContent = currentLang === 'ru'
+          ? 'Аккаунт создан! Проверьте почту для подтверждения или выполните вход.'
+          : 'Account created! Please check your email to confirm or sign in.';
+        return;
+      }
+
+      await checkSession();
+    }
+
+    async function handleLogout() {
+      await sb.auth.signOut();
+      currentUser = null;
+      document.getElementById('portalHeaderBtn').textContent = i18n[currentLang].navPortal;
+      document.getElementById('portalAuthView').style.display = 'block';
+      document.getElementById('portalWorkspaceView').style.display = 'none';
+    }
+
+    async function checkSession() {
+      const { data } = await sb.auth.getSession();
+      if (data && data.session && data.session.user) {
+        currentUser = data.session.user;
+        const isAdmin = currentUser.email.toLowerCase() === ADMIN_EMAIL;
+
+        document.getElementById('portalHeaderBtn').textContent = i18n[currentLang].navPortalActive;
+        document.getElementById('portalAuthView').style.display = 'none';
+        document.getElementById('portalWorkspaceView').style.display = 'block';
+        document.getElementById('userEmailDisplay').textContent = currentUser.email;
+
+        document.getElementById('adminRoleTag').style.display = isAdmin ? 'inline-block' : 'none';
+        document.getElementById('adminCreateBox').style.display = isAdmin ? 'block' : 'none';
+        document.getElementById('pTabRfqList').style.display = isAdmin ? 'inline-block' : 'none';
+        document.getElementById('pThAdminCol').style.display = isAdmin ? 'table-cell' : 'none';
+
+        await loadShipments();
+        if (isAdmin) {
+          await loadAdminRfqs();
+        }
+      } else {
+        document.getElementById('portalAuthView').style.display = 'block';
+        document.getElementById('portalWorkspaceView').style.display = 'none';
+      }
+    }
+
+    function switchPortalTab(tab) {
+      document.getElementById('pTabShipments').classList.toggle('active', tab === 'shipments');
+      document.getElementById('pTabNewOrder').classList.toggle('active', tab === 'newOrder');
+      document.getElementById('pTabRfqList').classList.toggle('active', tab === 'rfqList');
+
+      document.getElementById('viewShipments').style.display = tab === 'shipments' ? 'block' : 'none';
+      document.getElementById('viewNewOrder').style.display = tab === 'newOrder' ? 'block' : 'none';
+      document.getElementById('viewRfqList').style.display = tab === 'rfqList' ? 'block' : 'none';
+    }
+
+    function getStatusBadgeClass(status) {
+      if (status === 'Booking') return 'st-Booking';
+      if (status === 'At Port / Station') return 'st-AtPort';
+      if (status === 'In Transit') return 'st-InTransit';
+      if (status === 'Customs Clearance') return 'st-Customs';
+      if (status === 'Delivered') return 'st-Delivered';
+      return 'st-Booking';
+    }
+
+    async function loadShipments() {
+      if (!currentUser) return;
+      const isAdmin = currentUser.email.toLowerCase() === ADMIN_EMAIL;
+      const tbody = document.getElementById('shipmentsTbody');
+
+      const { data, error } = await sb
+        .from('shipments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color:var(--danger);">${error.message}</td></tr>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:28px;">${i18n[currentLang].pNoShipments}</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.map(item => {
+        const docsHtml = Array.isArray(item.documents) && item.documents.length > 0
+          ? item.documents.map(d => `<a href="${d.url}" target="_blank" rel="noopener" class="doc-link">📄 ${d.name}</a>`).join('')
+          : '<span style="color:var(--text-muted);font-size:12px;">—</span>';
+
+        const adminControls = isAdmin ? `
+          <td>
+            <select onchange="updateShipmentStatus('${item.id}', this.value)" style="padding:5px 8px;font-size:12px;">
+              <option value="Booking" ${item.status === 'Booking' ? 'selected' : ''}>Booking</option>
+              <option value="At Port / Station" ${item.status === 'At Port / Station' ? 'selected' : ''}>At Port / Station</option>
+              <option value="In Transit" ${item.status === 'In Transit' ? 'selected' : ''}>In Transit</option>
+              <option value="Customs Clearance" ${item.status === 'Customs Clearance' ? 'selected' : ''}>Customs Clearance</option>
+              <option value="Delivered" ${item.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+            </select>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">${item.user_email}</div>
+          </td>
+        ` : '';
+
+        return `
+          <tr>
+            <td class="mono" style="font-weight:700;color:var(--navy-900);">${item.tracking_number}</td>
+            <td>
+              <div style="font-weight:600;">${item.route_title}</div>
+              <div class="mono" style="font-size:12px;color:var(--text-muted);">${item.container_number || 'TBA'}</div>
+            </td>
+            <td><span class="status-pill ${getStatusBadgeClass(item.status)}">${item.status}</span></td>
+            <td class="mono" style="font-size:13px;">${item.eta || 'TBA'}</td>
+            <td>${docsHtml}</td>
+            ${adminControls}
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function handleAdminCreateShipment(e) {
+      e.preventDefault();
+      const clientEmail = document.getElementById('admClientEmail').value.trim();
+      const trackNo = document.getElementById('admTrackNo').value.trim();
+      const route = document.getElementById('admRoute').value.trim();
+      const container = document.getElementById('admContainer').value.trim();
+      const status = document.getElementById('admStatus').value;
+      const eta = document.getElementById('admEta').value || null;
+      const docName = document.getElementById('admDocName').value.trim();
+      const docUrl = document.getElementById('admDocUrl').value.trim();
+
+      const docs = (docName && docUrl) ? [{ name: docName, url: docUrl }] : [];
+      const msgBox = document.getElementById('portalMsg');
+
+      const { error } = await sb.from('shipments').insert([{
+        user_email: clientEmail,
+        tracking_number: trackNo,
+        route_title: route,
+        container_number: container,
+        status: status,
+        eta: eta,
+        documents: docs
+      }]);
+
+      if (error) {
+        msgBox.className = 'alert-msg error';
+        msgBox.textContent = error.message;
+        return;
+      }
+
+      msgBox.className = 'alert-msg success';
+      msgBox.textContent = currentLang === 'ru'
+        ? `Отгрузка ${trackNo} успешно создана для ${clientEmail}.`
+        : `Shipment ${trackNo} created for ${clientEmail}.`;
+      e.target.reset();
+      await loadShipments();
+    }
+
+    async function updateShipmentStatus(id, newStatus) {
+      const msgBox = document.getElementById('portalMsg');
+      const { error } = await sb.from('shipments').update({ status: newStatus }).eq('id', id);
+      if (error) {
+        msgBox.className = 'alert-msg error';
+        msgBox.textContent = error.message;
+        return;
+      }
+      msgBox.className = 'alert-msg success';
+      msgBox.textContent = currentLang === 'ru' ? 'Статус перевозки обновлен.' : 'Shipment status updated.';
+      await loadShipments();
+    }
+
+    async function handlePortalOrderSubmit(e) {
+      e.preventDefault();
+      if (!currentUser) return;
+      const company = document.getElementById('pOrderCompany').value;
+      const route = document.getElementById('pOrderRoute').value;
+      const equip = document.getElementById('pOrderEquip').value;
+      const curr = document.getElementById('pOrderCurr').value;
+      const details = document.getElementById('pOrderDetails').value;
+      const msgBox = document.getElementById('portalMsg');
+
+      const { error } = await sb.from('rfq_requests').insert([{
+        company_name: company,
+        email: currentUser.email,
+        route: route,
+        equipment: equip,
+        cargo_details: details,
+        payment_currency: curr
+      }]);
+
+      if (error) {
+        msgBox.className = 'alert-msg error';
+        msgBox.textContent = error.message;
+        return;
+      }
+
+      msgBox.className = 'alert-msg success';
+      msgBox.textContent = currentLang === 'ru'
+        ? 'Заявка отправлена диспетчеру BOSS EXPRESS. После букирования груз появится в разделе «Мои перевозки».'
+        : 'Order submitted to BOSS EXPRESS dispatch. Once booked, your shipment will appear under "My Shipments".';
+      e.target.reset();
+      switchPortalTab('shipments');
+    }
+
+    async function loadAdminRfqs() {
+      const tbody = document.getElementById('adminRfqTbody');
+      const { data, error } = await sb
+        .from('rfq_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error || !data) return;
+      tbody.innerHTML = data.map(r => `
+        <tr>
+          <td class="mono" style="font-size:12px;">${new Date(r.created_at).toLocaleDateString()}</td>
+          <td>
+            <div style="font-weight:600;">${r.company_name || '—'}</div>
+            <div class="mono" style="font-size:12px;color:var(--accent-orange);">${r.email}</div>
+          </td>
+          <td>
+            <div style="font-weight:600;">${r.route || '—'}</div>
+            <div style="font-size:12px;color:var(--text-muted);">${r.equipment || ''}</div>
+          </td>
+          <td class="mono" style="font-weight:600;">${r.payment_currency || 'USD'}</td>
+          <td style="font-size:13px;color:var(--text-secondary);">${r.cargo_details || ''}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Initialize page state
+    renderCorridorsTable();
+    recalculate();
+    checkSession();
+  </script>
+</body>
+</html>
