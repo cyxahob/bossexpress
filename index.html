@@ -52,6 +52,7 @@
       color: var(--text-primary);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     .mono {
@@ -1057,6 +1058,7 @@
       color: var(--accent-orange);
     }
 
+    /* Mobile Adaptability Fixes */
     @media (max-width: 960px) {
       .hero-grid, .calc-body, .rfq-grid {
         grid-template-columns: 1fr;
@@ -1074,11 +1076,34 @@
     }
 
     @media (max-width: 600px) {
+      .container {
+        padding: 0 16px;
+      }
       h1 {
-        font-size: 30px;
+        font-size: 28px;
+        line-height: 1.2;
       }
       .calc-inputs, .form-row-2, .hero-metrics {
         grid-template-columns: 1fr;
+      }
+      .hero {
+        padding: 40px 0;
+      }
+      section {
+        padding: 48px 0;
+      }
+      .portal-overlay {
+        padding: 12px;
+      }
+      .portal-header {
+        padding: 14px 18px;
+      }
+      .portal-body {
+        padding: 16px;
+      }
+      .auth-box {
+        margin: 24px auto;
+        padding: 20px;
       }
     }
   </style>
@@ -2411,10 +2436,9 @@
 
       document.getElementById('rfqRoute').value = `${originText} → ${destText}`;
       const prefix = currentLang === 'ru'
-        ? `Предварительный расчет на сайте: ${est} (${summary}). Прошу подтвердить актуальную ставку:`
-        : `Website calculator estimate: ${est} (${summary}). Please confirm firm rate:`;
-      document.getElementById('rfqDetails').value = prefix + '
-';
+        ? `Предварительный расчет на сайте: ${est} (${summary}). Прошу подтвердить актуальную ставку:\n`
+        : `Website calculator estimate: ${est} (${summary}). Please confirm firm rate:\n`;
+      document.getElementById('rfqDetails').value = prefix;
 
       document.getElementById('rfq').scrollIntoView({ behavior: 'smooth' });
     }
@@ -2441,7 +2465,6 @@
       const weight = document.getElementById('hqWeight').value;
       const contact = document.getElementById('hqContact').value;
 
-      // Save to Supabase rfq_requests table
       await sb.from('rfq_requests').insert([{
         company_name: 'Express Web Inquiry',
         email: contact,
@@ -2452,10 +2475,7 @@
       }]);
 
       const subject = encodeURIComponent(`Express RFQ: ${route} (${equip})`);
-      const body = encodeURIComponent(`Route: ${route}
-Equipment: ${equip}
-Cargo & Weight: ${weight}
-Contact: ${contact}`);
+      const body = encodeURIComponent(`Route: ${route}\nEquipment: ${equip}\nCargo & Weight: ${weight}\nContact: ${contact}`);
       window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
       e.target.reset();
     }
@@ -2492,15 +2512,7 @@ Contact: ${contact}`);
 
       const subject = encodeURIComponent(`RFQ [${company}]: ${route}`);
       const body = encodeURIComponent(
-        `Company: ${company}
-Email: ${email}
-Route: ${route}
-Equipment: ${equip}
-Incoterms: ${inco}
-Payment Currency: ${payCurr}
-
-Details:
-${details}`
+        `Company: ${company}\nEmail: ${email}\nRoute: ${route}\nEquipment: ${equip}\nIncoterms: ${inco}\nPayment Currency: ${payCurr}\n\nDetails:\n${details}`
       );
       window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
       e.target.reset();
