@@ -766,10 +766,92 @@
       padding: 15px 18px;
       border-bottom: 1px solid var(--border-light);
       color: var(--text-primary);
+      vertical-align: top;
     }
 
     tr:last-child td {
       border-bottom: none;
+    }
+
+    /* Interactive Shipment Timeline */
+    .shipment-timeline {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 4px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-light);
+      min-width: 440px;
+    }
+
+    .tl-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .tl-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: var(--border-strong);
+      z-index: 1;
+    }
+
+    .tl-step.done:not(:last-child)::after {
+      background: var(--navy-900);
+    }
+
+    .tl-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 2px solid var(--border-strong);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 5px;
+    }
+
+    .tl-step.done .tl-dot {
+      background: var(--navy-900);
+      border-color: var(--navy-900);
+    }
+
+    .tl-step.active .tl-dot {
+      background: var(--accent-orange);
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 0 3px rgba(230, 81, 0, 0.18);
+    }
+
+    .tl-label {
+      font-size: 10px;
+      line-height: 1.25;
+      color: var(--text-muted);
+      font-weight: 500;
+      padding: 0 2px;
+    }
+
+    .tl-step.done .tl-label {
+      color: var(--navy-900);
+      font-weight: 600;
+    }
+
+    .tl-step.active .tl-label {
+      color: var(--accent-orange);
+      font-weight: 700;
     }
 
     /* RFQ Section */
@@ -1154,6 +1236,9 @@
       .auth-box {
         margin: 16px auto;
         padding: 16px;
+      }
+      .shipment-timeline {
+        min-width: 340px;
       }
     }
   </style>
@@ -1804,7 +1889,7 @@
               <thead>
                 <tr>
                   <th data-i18n="pThTrack">Букинг №</th>
-                  <th data-i18n="pThRoute">Маршрут и контейнер</th>
+                  <th data-i18n="pThRoute">Маршрут, контейнер и трекинг</th>
                   <th data-i18n="pThStatus">Статус перевозки</th>
                   <th data-i18n="pThEta">ETA</th>
                   <th data-i18n="pThDocs">Документы</th>
@@ -1894,7 +1979,24 @@
 
     let currentUser = null;
     let authMode = 'login';
-    let currentLang = 'ru';
+
+    function detectInitialLang() {
+      try {
+        const saved = localStorage.getItem('be_lang');
+        if (saved === 'ru' || saved === 'en') return saved;
+      } catch (_) {}
+
+      const candidates = Array.isArray(navigator.languages) && navigator.languages.length
+        ? navigator.languages
+        : [navigator.language || 'en'];
+
+      const isRussian = candidates.some(locale =>
+        typeof locale === 'string' && locale.toLowerCase().startsWith('ru')
+      );
+      return isRussian ? 'ru' : 'en';
+    }
+
+    let currentLang = detectInitialLang();
     let currentCurrency = 'USD';
 
     // Indicative FX rates relative to 1 USD
@@ -1913,8 +2015,24 @@
     }
 
     // ==========================================
-    // 2. TRANSLATIONS (100% RU / EN)
+    // 2. TRANSLATIONS & TIMELINE CONFIG (RU / EN)
     // ==========================================
+    const TIMELINE_STAGES = [
+      { key: 'Booking', ru: 'Букинг', en: 'Booking' },
+      { key: 'At Port / Station', ru: 'Терминал', en: 'Terminal' },
+      { key: 'In Transit', ru: 'В пути', en: 'In Transit' },
+      { key: 'Customs Clearance', ru: 'Таможня', en: 'Customs' },
+      { key: 'Delivered', ru: 'Доставлен', en: 'Delivered' }
+    ];
+
+    const STATUS_LABELS = {
+      'Booking': { ru: 'Букирование', en: 'Booking Confirmed' },
+      'At Port / Station': { ru: 'В порту / на станции', en: 'At Port / Station' },
+      'In Transit': { ru: 'В пути', en: 'In Transit' },
+      'Customs Clearance': { ru: 'Таможенное оформление', en: 'Customs Clearance' },
+      'Delivered': { ru: 'Доставлен', en: 'Delivered' }
+    };
+
     const i18n = {
       ru: {
         topStatus: 'Операционный деск Москва: 09:00–19:00 (MSK / UTC+3)',
@@ -2089,7 +2207,7 @@
         admDocUrl: 'Ссылка на файл (Google Drive / PDF URL)',
         admCreateBtn: 'Создать отгрузку в базе',
         pThTrack: 'Букинг №',
-        pThRoute: 'Маршрут и контейнер',
+        pThRoute: 'Маршрут, контейнер и трекинг',
         pThStatus: 'Статус перевозки',
         pThEta: 'ETA',
         pThDocs: 'Документы',
@@ -2277,7 +2395,7 @@
         admDocUrl: 'Document Link (Google Drive / PDF URL)',
         admCreateBtn: 'Create Shipment Record',
         pThTrack: 'Booking No.',
-        pThRoute: 'Route & Container',
+        pThRoute: 'Route, Container & Timeline',
         pThStatus: 'Shipment Status',
         pThEta: 'ETA',
         pThDocs: 'Documents',
@@ -2376,8 +2494,12 @@
       `).join('');
     }
 
-    function setLang(lang) {
+    function applyLanguage(lang) {
       currentLang = lang;
+      try {
+        localStorage.setItem('be_lang', lang);
+      } catch (_) {}
+
       document.documentElement.lang = lang;
       document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
       document.getElementById('btn-en').classList.toggle('active', lang === 'en');
@@ -2406,6 +2528,10 @@
       if (currentUser) {
         loadShipments();
       }
+    }
+
+    function setLang(lang) {
+      applyLanguage(lang);
     }
 
     function setCurrency(curr) {
@@ -2569,7 +2695,7 @@
     }
 
     // ==========================================
-    // 5. CLIENT PORTAL & SUPABASE AUTH / CRUD
+    // 5. CLIENT PORTAL, TIMELINE & SUPABASE CRUD
     // ==========================================
     function openPortal() {
       document.getElementById('portalOverlay').classList.add('open');
@@ -2673,6 +2799,35 @@
       return 'st-Booking';
     }
 
+    function getLocalizedStatusText(status) {
+      const entry = STATUS_LABELS[status];
+      if (!entry) return status;
+      return currentLang === 'ru' ? entry.ru : entry.en;
+    }
+
+    function renderShipmentTimeline(status) {
+      const idx = TIMELINE_STAGES.findIndex(s => s.key === status);
+      const activeIndex = idx === -1 ? 0 : idx;
+
+      return `
+        <div class="shipment-timeline" aria-label="Shipment progress timeline">
+          ${TIMELINE_STAGES.map((stage, i) => {
+            const isDone = i < activeIndex || (status === 'Delivered' && i === TIMELINE_STAGES.length - 1);
+            const isActive = i === activeIndex && status !== 'Delivered';
+            const cls = isDone ? 'tl-step done' : (isActive ? 'tl-step active' : 'tl-step');
+            const dotContent = isDone ? '✓' : (isActive ? '•' : '');
+            const label = currentLang === 'ru' ? stage.ru : stage.en;
+            return `
+              <div class="${cls}">
+                <div class="tl-dot">${dotContent}</div>
+                <div class="tl-label">${label}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
     async function loadShipments() {
       if (!currentUser) return;
       const isAdmin = currentUser.email.toLowerCase() === ADMIN_EMAIL;
@@ -2717,8 +2872,9 @@
             <td>
               <div style="font-weight:600;">${item.route_title}</div>
               <div class="mono" style="font-size:12px;color:var(--text-muted);">${item.container_number || 'TBA'}</div>
+              ${renderShipmentTimeline(item.status)}
             </td>
-            <td><span class="status-pill ${getStatusBadgeClass(item.status)}">${item.status}</span></td>
+            <td><span class="status-pill ${getStatusBadgeClass(item.status)}">${getLocalizedStatusText(item.status)}</span></td>
             <td class="mono" style="font-size:13px;">${item.eta || 'TBA'}</td>
             <td>${docsHtml}</td>
             ${adminControls}
@@ -2836,9 +2992,8 @@
       `).join('');
     }
 
-    // Initialize page state
-    renderCorridorsTable();
-    recalculate();
+    // Initialize page state with automatic RU/EN detection
+    applyLanguage(currentLang);
     checkSession();
   </script>
 </body>
